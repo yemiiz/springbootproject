@@ -22,7 +22,13 @@ public class user {
     @NotBlank(message = "邮箱不能为空")
     @Email(message = "邮箱格式不正确")
     private String email;
+
+
+
     private LocalDateTime createTime;
+
+    @NotBlank(message = "密码不能为空")
+    private String password;
 
     public Long getId() {
         return id;
@@ -62,5 +68,13 @@ public class user {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,8 +1,11 @@
 package com.example.springtest1.service;
 
 
+import com.example.springtest1.dto.LoginDTO;
 import com.example.springtest1.entity.user;
 import com.example.springtest1.repository.UserRepository;
+import com.example.springtest1.util.JwtUtil;
+import com.example.springtest1.vo.LoginVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,5 +43,20 @@ public class UserService {
         user existing = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(existing);
+    }
+
+    public LoginVO login(LoginDTO dto) {
+        user u = userRepository.findByName(dto.getName());
+        if (u == null || !u.getPassword().equals(dto.getPassword())) {
+            throw new RuntimeException("用户名或密码错误");
+        }
+        String token = JwtUtil.generateToken(u.getId());
+        long expireTime = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L;
+        LoginVO vo = new LoginVO();
+        vo.setUserId(u.getId());
+        vo.setName(u.getName());
+        vo.setToken(token);
+        vo.setExpireTime(expireTime);
+        return vo;
     }
 }
